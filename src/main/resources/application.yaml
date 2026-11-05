@@ -1,0 +1,23 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: pharmacist-agent
+  ai:
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        options:
+          model: llama3.2
+          temperature: 0.1
+    mcp:
+      client:
+        enabled: true
+        name: pharmacist-mcp-client
+        version: 1.0.0
+        type: SYNC
+        sse:
+          connections:
+            ehr-server:
+              url: http://localhost:8081

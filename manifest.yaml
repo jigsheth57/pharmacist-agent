@@ -1,0 +1,22 @@
+---
+applications:
+  # ============================================================================
+  # 2. Pharmacist Agent (A2A Server + MCP Client)
+  # ============================================================================
+  - name: pharmacist-agent
+    path: ./target/pharmacist-agent-1.0.0.jar
+    buildpacks:
+      - java_buildpack_offline
+    memory: 1G
+    instances: 1
+    routes:
+      - route: pharmacist-agent.apps.internal
+    services:
+      - clinical-llm
+      - clinical-mcp-gateway
+    env:
+      SPRING_PROFILES_ACTIVE: tanzu
+      JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 17.+ } }'
+      # The MCP client binds directly to the route governed by the MCP Gateway
+      SPRING_AI_MCP_CLIENT_ENABLED: "true"
+      SPRING_AI_MCP_CLIENT_TYPE: SYNC
