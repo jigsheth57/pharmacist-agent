@@ -1,4 +1,15 @@
-# Platform routing/credentials must be supplied explicitly; there is no implicit cloud-model binding.
+# Single-instance CF template. Explicit bindings are validated before application startup.
 server:
   address: 0.0.0.0
   port: ${PORT:8080}
+spring:
+  flyway:
+    enabled: false
+  ai:
+    model:
+      chat: none
+      embedding: none
+demo:
+  provider: openai
+  mcp-url: ${DEMO_MCP_URL}
+  agent-url: ${DEMO_AGENT_URL}

@@ -25,9 +25,34 @@ spring:
       embedding:
         enabled: false
 demo:
+  execution:
+    review-workers: 2
+    review-queue: 16
+    consultation-workers: 4
+    consultation-queue: 32
+    stream-workers: 16
+    connect-timeout: 3s
+    read-timeout: 8s
   token-secret: ${DEMO_TOKEN_SECRET}
   model: ${DEMO_MODEL:qwen2.5:7b}
   mcp-url: ${DEMO_MCP_URL:http://127.0.0.1:8081}
   agent-name: pharmacist
   agent-url: ${DEMO_AGENT_URL:http://127.0.0.1:8082}
   agent-skill: medication-safety
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+      probes:
+        enabled: true
+      group:
+        readiness:
+          include: readinessState,db
+  tracing:
+    sampling:
+      probability: 1.0

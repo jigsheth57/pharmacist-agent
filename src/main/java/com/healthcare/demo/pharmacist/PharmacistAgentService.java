@@ -3,7 +3,6 @@ package com.healthcare.demo.pharmacist;
 import com.healthcare.demo.shared.*;
 import com.healthcare.demo.shared.Contracts.*;
 import java.util.*;
-import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -12,18 +11,20 @@ import org.springframework.stereotype.Service;
 public class PharmacistAgentService implements Specialist {
   private final String toolsUrl;
   private final ModelAssessment model;
+  private final McpAccessFactory toolsFactory;
 
   public PharmacistAgentService(
-      ChatClient.Builder builder,
-      @Value("${demo.mcp-url}") String toolsUrl,
-      @Value("${demo.model}") String modelName) {
+      ModelAssessment model,
+      McpAccessFactory toolsFactory,
+      @Value("${demo.mcp-url}") String toolsUrl) {
     this.toolsUrl = toolsUrl;
-    this.model = new ModelAssessment(builder, modelName);
+    this.toolsFactory = toolsFactory;
+    this.model = model;
   }
 
   @Override
   public SpecialistResult review(ReviewInput input, String mcpToken, ActivityLog log) {
-    try (var tools = new McpAccess(toolsUrl, mcpToken, log)) {
+    try (var tools = toolsFactory.open(toolsUrl, mcpToken, log)) {
       var patient =
           tools.call(
               "getPatientSnapshot", Map.of("patientId", input.patientId()), PatientSnapshot.class);
