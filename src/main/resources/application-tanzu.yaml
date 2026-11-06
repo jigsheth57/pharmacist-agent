@@ -1,15 +1,15 @@
+# Single-instance CF template. Explicit bindings are validated before application startup.
 server:
-  port: 8080
-
+  address: 0.0.0.0
+  port: ${PORT:8080}
 spring:
+  flyway:
+    enabled: false
   ai:
-    # Tanzu Platform GenAI service automatically configures Spring AI OpenAI client
-    mcp:
-      client:
-        name: pharmacist-mcp-client
-        type: SYNC
-        sse:
-          connections:
-            # Reads the gateway route injected by binding to clinical-mcp-gateway
-            ehr-gateway:
-              url: ${vcap.services.clinical-mcp-gateway.credentials.uri:http://localhost:8081}/ehr-server
+    model:
+      chat: none
+      embedding: none
+demo:
+  provider: openai
+  mcp-url: ${DEMO_MCP_URL}
+  agent-url: ${DEMO_AGENT_URL}
