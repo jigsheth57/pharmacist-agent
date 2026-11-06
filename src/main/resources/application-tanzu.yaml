@@ -1,15 +1,4 @@
+# Platform routing/credentials must be supplied explicitly; there is no implicit cloud-model binding.
 server:
-  port: 8080
-
-spring:
-  ai:
-    # Tanzu Platform GenAI service automatically configures Spring AI OpenAI client
-    mcp:
-      client:
-        name: pharmacist-mcp-client
-        type: SYNC
-        sse:
-          connections:
-            # Reads the gateway route injected by binding to clinical-mcp-gateway
-            ehr-gateway:
-              url: ${vcap.services.clinical-mcp-gateway.credentials.uri:http://localhost:8081}/ehr-server
+  address: 0.0.0.0
+  port: ${PORT:8080}
